@@ -27,4 +27,78 @@ For more information about each of these data sets either continue reading or fo
 #| include: false
 from pathlib import Path
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+project_dir = Path.cwd()
+archive_dir = project_dir / "archive"
+
+if not archive_dir.exists():
+    archive_dir = project_dir.parent / "archive"
+
+csv_files = {
+    "child_illiteracy_by_country": archive_dir / "child_illiteracy_by_country.csv",
+    "child_illiteracy_regional_trends": archive_dir / "child_illiteracy_regional_trends.csv",
+    "foundational_skills_assessment": archive_dir / "foundational_skills_assessment.csv",
+    "intervention_programs": archive_dir / "intervention_programs.csv",
+    "learning_poverty_indicators": archive_dir / "learning_poverty_indicators.csv",
+    "out_of_school_children": archive_dir / "out_of_school_children.csv",
+}
+
+dataframes = {}
+
+for name, path in csv_files.items():
+    if path.exists():
+        dataframes[name] = pd.read_csv(path)
+        print(f"{name}: {len(dataframes[name])} rows, {len(dataframes[name].columns)} columns")
+    else:
+        print(f"Missing file: {path}")
+
+child_illiteracy_by_country = dataframes.get("child_illiteracy_by_country")
+child_illiteracy_regional_trends = dataframes.get("child_illiteracy_regional_trends")
+foundational_skills_assessment = dataframes.get("foundational_skills_assessment")
+intervention_programs = dataframes.get("intervention_programs")
+learning_poverty_indicators = dataframes.get("learning_poverty_indicators")
+out_of_school_children = dataframes.get("out_of_school_children")
+
+```
+
+### 1. Child Illiteracy by Country
+
+```{python}
+child_illiteracy_by_country.head()
+```
+
+```{python}
+#| echo: false
+#| output: true
+mean_country_learn = child_illiteracy_by_country.groupby('country')['learning_poverty_pct'].mean().reset_index()
+print(mean_country_learn)
+```
+
+```{python}
+#| include: false
+high_mean_country_learn = mean_country_learn.sort_values(by="learning_poverty_pct", ascending = False)
+```
+
+```{python}
+#| echo: false
+#| output: true
+#| warning: false
+#| fig-width: 6
+#| fig-asp: 1.5
+
+plt.figure(figsize=(10, 16))
+
+sns.barplot(data = high_mean_country_learn, 
+    x = "learning_poverty_pct", 
+    y = "country", 
+    errorbar=None, 
+    palette="viridis", 
+    hue="country")
+
+plt.title("Average 10 Year Learning Poverty pct by Country", fontsize=16)
+
+plt.tight_layout() 
+plt.show()
 ```
