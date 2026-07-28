@@ -17,7 +17,7 @@ This project will explore each of the following data sets to find indicators and
 2. Child illiteracy regional trends
 3. foundational skills assessments
 4. intervention programs
-5. learning poverty indicators
+5. learning poverty indicators`
 6. out of school children
 
 For more information about each of these data sets either continue reading or follow the link above to the original Kaggle Data page for you to also explore. 
@@ -26,4 +26,4 @@ For more information about each of these data sets either continue reading or fo
 #| include: false
 from pathlib import Path
 import pandas as pd
-`````
+```
