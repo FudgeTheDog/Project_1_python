@@ -1,0 +1,37 @@
+{
+  "cells": [
+    {
+      "cell_type": "raw",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Hello, Quarto\"\n",
+        "format: \n",
+        " html:\n",
+        "    theme: cosmo\n",
+        "---"
+      ],
+      "id": "bcaa69ad"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "print('hello world')"
+      ],
+      "id": "2aba6654",
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/Users/connorpiercy/Library/Python/3.14/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

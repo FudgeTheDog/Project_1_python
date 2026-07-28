@@ -1,0 +1,2 @@
+quarto preview "Main Document.qmd"
+quarto render "Main Document.qmd"
