@@ -1,24 +1,25 @@
 ---
-title: "Data Exploration and Visualization of child illiteracy and learning poverty"
+title: "Data Exploration and Visualization of Child Illiteracy and Learning Poverty"
 author: "Connor Piercy"
 format: 
  html:
     theme: cosmo
 ---
 
-### Introduction
+## Introduction
 
 This is a report and data exploration into 6 datasets looking at child illiteracy and learning poverty. The Data highlights children aged 0-10 years old across 69 countries. 
 
 Data was obtained from Kaggle by Zkskhurram called Global Child Illiteracy Dataset Children 10 YRS [Kaggle Data](https://www.kaggle.com/datasets/zkskhurram/global-child-illiteracy-dataset-children-10-yrs)
 
-This project will explore each of the following data sets to find indicators and key information to help explain child illiteracy and learning poverty:
+This project will explore each of the following data sets to find indicators and key information to help explain child illiteracy and learning poverty: 
+
 1. Child Illiteracy by Country
-2. Child illiteracy regional trends
-3. foundational skills assessments
-4. intervention programs
-5. learning poverty indicators`
-6. out of school children
+2. Child Illiteracy Regional Trends
+3. Foundational Skills Assessments
+4. Intervention Programs
+5. Learning Poverty Indicators
+6. Out of School Children
 
 For more information about each of these data sets either continue reading or follow the link above to the original Kaggle Data page for you to also explore. 
 
