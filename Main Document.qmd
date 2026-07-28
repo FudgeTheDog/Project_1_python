@@ -22,3 +22,8 @@ This project will explore each of the following data sets to find indicators and
 
 For more information about each of these data sets either continue reading or follow the link above to the original Kaggle Data page for you to also explore. 
 
+```{python}
+#| include: false
+from pathlib import Path
+import pandas as pd
+`````
