@@ -29,6 +29,7 @@ from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from itables import show
 
 project_dir = Path.cwd()
 archive_dir = project_dir / "archive"
@@ -66,29 +67,67 @@ out_of_school_children = dataframes.get("out_of_school_children")
 ### 1. Child Illiteracy by Country
 
 ```{python}
+#| include: false
 child_illiteracy_by_country.head()
+```
+
+First Get some descriptive data on our dataset
+
+```{python}
+#| label: tbl-interactive
+#| tbl-cap: "Summary Statistics"
+#| include: false
+
+#Summary
+summary_stats = child_illiteracy_by_country.drop(columns=['year']).describe()
+#Change themes
+theme_stats_summary = summary_stats.style\
+    .set_table_styles([
+        {"selector": "th", "props": [("background-color", "#1E3A8A"), ("color", "white")]}
+    ])\
+    .set_properties(**{
+        "background-color": "#F3F4F6",
+        "color": "#111827",
+        "border-color": "#CBD5E1"
+    })
 ```
 
 ```{python}
 #| echo: false
 #| output: true
-mean_country_learn = child_illiteracy_by_country.groupby('country')['learning_poverty_pct'].mean().reset_index()
-print(mean_country_learn)
+show(theme_stats_summary, allow_html=True)
 ```
 
+Next we can look at the learning_poverty_pct of each country and see which country has the larget to smallest
 ```{python}
-#| include: false
+#| echo: false
+#| output: true
+#get the means
+mean_country_learn = child_illiteracy_by_country.drop(columns=['year']).groupby('country').mean(numeric_only=True).reset_index()
+#sort the order from high to low
 high_mean_country_learn = mean_country_learn.sort_values(by="learning_poverty_pct", ascending = False)
+#put into show table
+theme_mean_country = high_mean_country_learn.style\
+    .set_table_styles([
+        {"selector": "th", "props": [("background-color", "#9c17d1"), ("color", "white")]}
+    ])\
+    .set_properties(**{
+        "background-color": "#F3F4F6",
+        "color": "#111827",
+        "border-color": "#CBD5E1"
+    })
+
+show(theme_mean_country, allow_html=True)
 ```
 
 ```{python}
 #| echo: false
 #| output: true
 #| warning: false
-#| fig-width: 6
-#| fig-asp: 1.5
+#| fig-width: 8
+#| fig-asp: 12
 
-plt.figure(figsize=(10, 16))
+plt.figure(figsize=(8, 11))
 
 sns.barplot(data = high_mean_country_learn, 
     x = "learning_poverty_pct", 
