@@ -66,9 +66,27 @@ out_of_school_children = dataframes.get("out_of_school_children")
 
 ### 1. Child Illiteracy by Country
 
+Table containing each country in the data set with there data on learning poverty, primary school completion, out of school rate, foundational reading, and foundational numeracy percentages each year, as well as other key student population statistics 
+
 ```{python}
-#| include: false
-child_illiteracy_by_country.head()
+#| echo: false
+#| output: true
+theme_child_illiteracy_by_country = child_illiteracy_by_country.style\
+    .set_table_styles([
+        {"selector": "th", "props": [("background-color", "#1E3A8A"), ("color", "white")]}
+    ])\
+    .set_properties(**{
+        "background-color": "#F3F4F6",
+        "color": "#111827",
+        "border-color": "#CBD5E1"
+    })
+show(theme_child_illiteracy_by_country, allow_html=True, columnDefs=[
+            {
+                'targets': '_all',
+                'className': 'dt-left'
+            }
+    ], pageLength= 16, lengthMenu=[[16,32,48,64], [16,32,48,64]
+    ])
 ```
 
 First Get some descriptive data on our dataset
@@ -95,7 +113,12 @@ theme_stats_summary = summary_stats.style\
 ```{python}
 #| echo: false
 #| output: true
-show(theme_stats_summary, allow_html=True)
+show(theme_stats_summary, allow_html=True, columnDefs=[
+            {
+                'targets': '_all',
+                'className': 'dt-left'
+            }
+            ])
 ```
 
 Next we can look at the learning_poverty_pct of each country and see which country has the larget to smallest
@@ -117,7 +140,12 @@ theme_mean_country = high_mean_country_learn.style\
         "border-color": "#CBD5E1"
     })
 
-show(theme_mean_country, allow_html=True)
+show(theme_mean_country, allow_html=True, columnDefs=[
+            {
+                'targets': '_all',
+                'className': 'dt-left'
+            }
+            ])
 ```
 
 ```{python}
