@@ -30,6 +30,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from itables import show
+import plotly.graph_objects as go
+import plotly.express as px
 
 project_dir = Path.cwd()
 archive_dir = project_dir / "archive"
@@ -89,7 +91,7 @@ show(theme_child_illiteracy_by_country, allow_html=True, columnDefs=[
     ])
 ```
 
-First Get some descriptive data on our dataset
+Descriptive statistics for the child illiteracy by country data set. This includes the mean, standard deviation, minimum, maximum, and quartiles for each of the numeric columns in the data set.
 
 ```{python}
 #| label: tbl-interactive
@@ -97,7 +99,7 @@ First Get some descriptive data on our dataset
 #| include: false
 
 #Summary
-summary_stats = child_illiteracy_by_country.drop(columns=['year']).describe()
+summary_stats = child_illiteracy_by_country.drop(columns=['year']).describe().drop('count')
 #Change themes
 theme_stats_summary = summary_stats.style\
     .set_table_styles([
@@ -121,15 +123,68 @@ show(theme_stats_summary, allow_html=True, columnDefs=[
             ])
 ```
 
-Next we can look at the learning_poverty_pct of each country and see which country has the larget to smallest
+Frequency table of regions and income groups
+
 ```{python}
 #| echo: false
 #| output: true
-#get the means
+income_freq_table = child_illiteracy_by_country['income_group'].value_counts().reset_index()
+income_freq_table.columns = ['income_group', 'count']
+
+theme_ift = income_freq_table.style\
+    .set_table_styles([
+        {"selector": "th", "props": [("background-color", "#8a641e"), ("color", "white")]}
+    ])\
+            .set_properties(**{
+                "background-color": "#F3F4F6",
+                "color": "#111827",
+                "border-color": "#CBD5E1"
+        })
+
+show(theme_ift, allow_html=True, columnDefs=[
+            {
+                'targets': '_all',
+                'className': 'dt-left'
+            }
+            ])
+
+```
+
+```{python}
+#| echo: false
+#| output: true
+region_freq_table = child_illiteracy_by_country['region'].value_counts().reset_index()
+region_freq_table.columns = ['region', 'count']
+
+theme_rft = region_freq_table.style\
+    .set_table_styles([
+        {"selector": "th", "props": [("background-color", "#1e8a73"), ("color", "white")]}
+    ])\
+            .set_properties(**{
+                "background-color": "#F3F4F6",
+                "color": "#111827",
+                "border-color": "#CBD5E1"
+        })
+
+show(theme_rft, allow_html=True, columnDefs=[
+            {
+                'targets': '_all',
+                'className': 'dt-left'
+            }
+            ])
+```
+
+
+
+Mean of each numeric column by country, sorted from highest to lowest learning poverty percentage.
+```{python}
+#| echo: false
+#| output: true
+
 mean_country_learn = child_illiteracy_by_country.drop(columns=['year']).groupby('country').mean(numeric_only=True).reset_index()
-#sort the order from high to low
+
 high_mean_country_learn = mean_country_learn.sort_values(by="learning_poverty_pct", ascending = False)
-#put into show table
+
 theme_mean_country = high_mean_country_learn.style\
     .set_table_styles([
         {"selector": "th", "props": [("background-color", "#9c17d1"), ("color", "white")]}
@@ -168,4 +223,151 @@ plt.title("Average 10 Year Learning Poverty pct by Country", fontsize=16)
 
 plt.tight_layout() 
 plt.show()
+```
+
+
+Mean of each numeric column by income group.
+
+
+```{python}
+#| echo: false
+#| output: true
+
+median_income_group_learn = child_illiteracy_by_country.drop(columns=['year']).groupby('income_group').median(numeric_only=True).reset_index()
+
+theme_median_income_group = median_income_group_learn.style\
+    .set_table_styles([
+        {"selector": "th", "props": [("background-color", "#9c17d1"), ("color", "white")]}
+    ])\
+    .set_properties(**{
+        "background-color": "#F3F4F6",
+        "color": "#111827",
+        "border-color": "#CBD5E1"
+    })
+
+show(theme_median_income_group, allow_html=True, columnDefs=[
+            {
+                'targets': '_all',
+                'className': 'dt-left'
+            }
+            ])
+```
+
+Mean of median numeric column by region
+
+```{python}
+#| echo: false
+#| output: true
+
+median_region_learn = child_illiteracy_by_country.drop(columns=['year']).groupby('region').median(numeric_only=True).reset_index()
+
+theme_median_region = median_region_learn.style\
+    .set_table_styles([
+        {"selector": "th", "props": [("background-color", "#9c17d1"), ("color", "white")]}
+    ])\
+    .set_properties(**{
+        "background-color": "#F3F4F6",
+        "color": "#111827",
+        "border-color": "#CBD5E1"
+    })
+
+show(theme_median_region, allow_html=True, columnDefs=[
+            {
+                'targets': '_all',
+                'className': 'dt-left'
+            }
+            ])
+```
+
+### Exploratory Data Analysis of Variables
+
+
+
+```{python}
+#| echo: false
+#| output: true
+
+features = [
+    'learning_poverty_pct', 'primary_completion_rate_pct', 'out_of_school_rate_pct', 
+    'foundational_reading_pct', 'foundational_numeracy_pct', 'gender_parity_index',
+    'govt_education_spending_pct_gdp', 'pupil_teacher_ratio', 'est_illiterate_children_millions'
+]
+
+#Build Histograms for variable distributions with box plots as marginal plots. The first variable will be visible, the rest will be hidden and toggled via dropdown menu.
+
+fig = px.histogram(
+    child_illiteracy_by_country, 
+    x=features[0], 
+    marginal="box"
+)
+
+# Force the starting box plot trace to be notched
+for trace in fig.data:
+    if isinstance(trace, go.Box):
+        trace.notched = True
+    trace.marker.color = "teal"
+
+for col in features[1:]:
+    sub_fig = px.histogram(
+        child_illiteracy_by_country, 
+        x=col, 
+        marginal="box"
+    )
+    
+    for trace in sub_fig.data:
+        if isinstance(trace, go.Box):
+            trace.notched = True
+        trace.marker.color = "teal"
+        trace.visible = False
+        fig.add_trace(trace)
+
+# Create Toggle Buttons for Each Feature
+buttons = []
+traces_per_feature = 2
+total_features = len(features)
+
+for i, col in enumerate(features):
+    clean_title = col.replace("_", " ").title()
+    
+    # Construct the boolean visibility array for this specific feature selection
+    visibility_mask = []
+    for f_idx in range(total_features):
+        if f_idx == i:
+            visibility_mask.extend([True] * traces_per_feature)
+        else:
+            visibility_mask.extend([False] * traces_per_feature)
+            
+    buttons.append(
+        dict(
+            label=clean_title,
+            method="update",
+            args=[
+                {"visible": visibility_mask},  # Toggle the paired traces
+                {
+                    "title": f"Distribution of {clean_title}",
+                    "xaxis.title.text": clean_title  # Dynamic axis label updates
+                }
+            ]
+        )
+    )
+
+#Drop Down menu of toggle variables
+fig.update_layout(
+    updatemenus=[
+        dict(
+            buttons=buttons,
+            direction="down",
+            showactive=True,
+            x=0.0,
+            xanchor="left",
+            y=1.22,  # Lifted higher so it doesn't overlap the top box subplot
+            yanchor="top"
+        )
+    ],
+    template="plotly_white",
+    bargap=0.05
+)
+
+fig.show()
+
 ```
