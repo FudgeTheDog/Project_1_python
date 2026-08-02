@@ -599,3 +599,28 @@ show(region_box_data_table, allow_html=True, columnDefs=[
     }
 ])
 ```
+
+### Correlation Heatmap of the numeric variables in the child illiteracy by country data set. 
+
+The correlation is calculated using the Pearson correlation coefficient. The heat map is color coded with blue indicating a positive correlation and red indicating a negative correlation. The darker the color, the stronger the correlation.
+
+1. There is no correlation with the variables gender parity index and government education spending as a percentage of GDP with any of the other variables. 
+2. estimated illiterate child_millions has very weak correlations with all other variables ranging from -0.21 to 0.20. 
+3. The strongest correlation is between learning poverty pct and both foundational reading and numeracy with a negative correlation coefficient of 0.99. Learning poverty percentage also has a strong negative correlation with primary completation rate percentage with a correlation coefficient of -0.96, while having a strong positive correlation with out of school rate percentage with a correlation coefficient of 0.81. This shows that as learning poverty percentage increases, primary completion rate and foundational reading and numeracy decrease, while out of school rate percentage increases.
+4. pupil_teacher_ratio has a strong negative correlation with primary_completion_rate_pct, foundational numeracy and reading with correlation coefficients of -0.80, -0.83, and -0.84 respectively. it also has moderate to strong positive correlations with learning_poverty_pct and out_of_school_rate_pct with correlation coefficients of 0.85 and 0.68 respectively. This shows that the higher the ratio of pupils to teachers, the lower the primary completion rate, foundational reading and numeracy, and the higher the learning poverty and out of school rates.
+5. Primary completion rate percentage has strong positive correlations with both foundational reading and numeracy with correlation coefficients of 0.95 and 0.94 respectively. However it also holds a strong negative correlation with out of school rate percentage with a correlation coefficient of -0.78. 
+6. out of school rate also has a strong negative correlation with both foundational reading and numeracy with both having a correlation coefficients of -0.80 
+7. Foundational numeracy and foundational reading have a very strong positive correlation with a correlation coefficient of 0.99.
+All of these correlations are as expected and show that as learning poverty increases, primary completion rate, foundational reading and numeracy decrease, while out of school rate increases.
+
+
+```{python}
+#| echo: false
+#| output: true
+illiteracy_corr = child_illiteracy_by_country.drop(columns=['year','population_under_10_millions']).corr(numeric_only=True)
+plt.figure(figsize=(7, 6))
+sns.heatmap(illiteracy_corr, annot=True, fmt=".2f", cmap="coolwarm", center=0, cbar_kws={"shrink": 0.8})
+plt.title("Correlation Heatmap of Child Illiteracy variables", fontsize=16)
+plt.show()
+
+```
