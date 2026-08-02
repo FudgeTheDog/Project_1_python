@@ -253,7 +253,7 @@ show(theme_median_income_group, allow_html=True, columnDefs=[
             ])
 ```
 
-Mean of median numeric column by region
+median of each numeric column by region
 
 ```{python}
 #| echo: false
@@ -280,7 +280,16 @@ show(theme_median_region, allow_html=True, columnDefs=[
 ```
 
 ### Exploratory Data Analysis of Variables
+Below are the distributions of each of the numeric variables of each country averaged over 15 years. The distributions are shown as histograms with box plots as marginal plots. The box plots are notched to show the confidence interval around the median.
 
+1. Taking a closer look at the distributions of each of the numeric variables in the child illiteracy by country data set. In the learning poverty pct we can see the distribution is slightly right skewed with a long tail, with the median falling at 45.52% and 1st and 3rd quartiles falling at 23.62% and 70.30% respectively.
+2. In the primary completion rate we can see that the distribution is left skewed with a long tail, with the median falling at 75.87%, and 1st and 3rd quartiles falling at 61.16% and 86.99% respectively.
+3. For the out of school rate we can see that the distribution is right skewed with a long right tail, with the median falling at 6.9% out of school. The interquartile range is 3.67% to 10.61% out of school rate.
+4. For Foundational reading we can see that the distribution is left skewed with a long left tail, with the median falling at 52.75%, and 1st and 3rd quartiles falling at 27.81% and 74.59% respectively. Foundational numeracy has the same distribution as foundational reading, with the median falling at 50.41%, and 1st and 3rd quartiles falling at 24.91% and 71.2% respectively.
+5. Gender Parity Index is left skewed with a long left tail and a outlier at 0.84 gender parity index. The median falls at 0.95 and the interquartile range is 0.93 to 0.97 gender. 
+6. Government ecucation spending as a percentage of GDP is relatively normally distributed but has a number of outliers on the left of graph with very low government spending on education, the lowest being 3.27% of GDP. The median falls at 
+7. On the pupil to teacher ratio we can see that the distribution is right skewed, and the median falls at 37.55 pupils per teacher, with the interquartile range falling at 22.675 to 46.63594
+8. Lastly the estimated number of illiterate children in millions is very right skewed with the majority of the data falling in the 0 to 5 million range. There a large amount of outliers on the right of the distribution making the median fall at 2.75 million illiterate children, but having a max of 158.87; the next highest value being at 38.9 million illiterate children. The interquartile range falls at 950 thousand to 6.66 million estimated illiterate children.
 
 
 ```{python}
@@ -296,7 +305,7 @@ features = [
 #Build Histograms for variable distributions with box plots as marginal plots. The first variable will be visible, the rest will be hidden and toggled via dropdown menu.
 
 fig = px.histogram(
-    child_illiteracy_by_country, 
+    mean_country_learn, 
     x=features[0], 
     marginal="box"
 )
@@ -309,7 +318,7 @@ for trace in fig.data:
 
 for col in features[1:]:
     sub_fig = px.histogram(
-        child_illiteracy_by_country, 
+        mean_country_learn, 
         x=col, 
         marginal="box"
     )
