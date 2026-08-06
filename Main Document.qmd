@@ -626,6 +626,8 @@ plt.show()
 
 ### Linear Relationship between Learning Poverty Percentage and other variables
 ```{python}
+#| echo: false
+#| output: true
 target_variable = 'learning_poverty_pct' 
 features = [
     'primary_completion_rate_pct', 'out_of_school_rate_pct', 
@@ -705,8 +707,6 @@ fig.update_layout(
 )
 
 fig.show()
-
-print(child_illiteracy_by_country[['learning_poverty_pct', 'out_of_school_rate_pct']].describe())
 ```
 
 The scatterplot shows a strong negative relationship between primary completion rate and learning poverty. A funnel-shaped distribution is evident, with greater variability in learning poverty among countries with lower completion rates. As primary completion approaches 100%, learning poverty consistently declines and exhibits much less variability. This suggests that while low completion is associated with a wide range of learning outcomes, countries achieving near-universal primary completion also tend to experience uniformly low levels of learning poverty.
