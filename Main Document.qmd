@@ -289,7 +289,7 @@ show(theme_median_region, allow_html=True, columnDefs=[
 7. On the pupil to teacher ratio we can see that the distribution is right skewed, and the median falls at 37.55 pupils per teacher, with the interquartile range falling at 22.675 to 46.63594
 8. Lastly the estimated number of illiterate children in millions is very right skewed with the majority of the data falling in the 0 to 5 million range. There a large amount of outliers on the right of the distribution making the median fall at 2.75 million illiterate children, but having a max of 158.87; the next highest value being at 38.9 million illiterate children. The interquartile range falls at 950 thousand to 6.66 million estimated illiterate children.
 
-
+# Histograms of each numeric variable with box plots as marginal plots. The first variable will be visible, the rest will be hidden and toggled via dropdown menu.
 ```{python}
 #| echo: false
 #| output: true
@@ -376,7 +376,6 @@ fig.update_layout(
 )
 
 fig.show()
-
 ```
 
 #### Box Plots of each numeric variable by income group and region. The box plots are notched. 
@@ -624,3 +623,90 @@ plt.title("Correlation Heatmap of Child Illiteracy variables", fontsize=16)
 plt.show()
 
 ```
+
+### Linear Relationship between Learning Poverty Percentage and other variables
+```{python}
+target_variable = 'learning_poverty_pct' 
+features = [
+    'primary_completion_rate_pct', 'out_of_school_rate_pct', 
+    'foundational_reading_pct', 'foundational_numeracy_pct', 'gender_parity_index',
+    'govt_education_spending_pct_gdp', 'pupil_teacher_ratio', 'est_illiterate_children_millions'
+]
+fig = px.scatter(
+    child_illiteracy_by_country,
+    x=features[0],
+    y=target_variable,
+    trendline="ols",
+    trendline_color_override="red"
+)
+
+for trace in fig.data:
+    if isinstance(trace, go.Scatter) and trace.mode == "markers":
+        trace.marker.color="teal"
+
+for col in features[1:]:
+    sub_fig = px.scatter(
+        child_illiteracy_by_country,
+        x=col,
+        y=target_variable,
+        trendline="ols",
+        trendline_color_override="red"
+    )
+
+    for trace in sub_fig.data:
+        if isinstance(trace, go.Scatter) and trace.mode == "markers":
+            trace.marker.color="teal"
+        trace.visible = False
+        fig.add_trace(trace)
+
+buttons = []
+traces_per_feature = 2
+total_features = len(features)
+
+for i, col in enumerate(features):
+    clean_title = col.replace("_", " ").title()
+    clean_target = target_variable.replace("_", " ").title()
+
+    visibility_mask = []
+    for f_idx in range(total_features):
+        if f_idx == i:
+            visibility_mask.extend([True] * traces_per_feature)
+        else:
+            visibility_mask.extend([False] * traces_per_feature)
+            
+    buttons.append(
+        dict(
+            label=clean_title,
+            method="update",
+            args=[
+                {"visible": visibility_mask},  
+                {
+                    "title": f"{clean_title} vs {clean_target}",
+                    "xaxis.title.text": clean_title,
+                    "yaxis.title.text": clean_target
+                }
+            ]
+        )
+    )
+
+fig.update_layout(
+    updatemenus=[
+        dict(
+            buttons=buttons,
+            direction="down",
+            showactive=True,
+            x=0.0,
+            xanchor="left",
+            y=1.15,
+            yanchor="top"
+        )
+    ],
+    template="plotly_white"
+)
+
+fig.show()
+
+print(child_illiteracy_by_country[['learning_poverty_pct', 'out_of_school_rate_pct']].describe())
+```
+
+The scatterplot shows a strong negative relationship between primary completion rate and learning poverty. A funnel-shaped distribution is evident, with greater variability in learning poverty among countries with lower completion rates. As primary completion approaches 100%, learning poverty consistently declines and exhibits much less variability. This suggests that while low completion is associated with a wide range of learning outcomes, countries achieving near-universal primary completion also tend to experience uniformly low levels of learning poverty.
